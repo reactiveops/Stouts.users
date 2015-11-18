@@ -34,6 +34,7 @@
       shell: "{{item.shell|default(users_shell)}}"
       system: "{{item.system|default('no')}}"
       update_password: "{{item.update_password|default('always')}}"
+      generate_ssh_key: "{{item.generate_ssh_key|default('no')}}"
   when: not users_to_install or item.name|default(item) in users_to_install
   with_items: users_users
 
