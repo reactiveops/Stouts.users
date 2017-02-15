@@ -52,4 +52,4 @@
   when: not users_to_install or item.0.name in users_to_install
   with_subelements:
     - "{{users_ssh_keys}}"
-    - "{{authorized}}"
+    - authorized
