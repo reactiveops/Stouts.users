@@ -2,16 +2,16 @@
 
 - name: Ensure the groups are present
   group: name={{item.name|default(item)}} system={{item.system|default("no")}}
-  with_items: users_groups
+  with_items: "{{users_groups}}"
 
 - name: Ensure the removed groups are not present
   group: name={{item}} state=absent
-  with_items: users_remove_groups
+  with_items: "{{users_remove_groups}}"
 
 - name: Create per user groups
   group: name={{item.name|default(item)}}
   when: not users_to_install or item.name|default(item) in users_to_install
-  with_items: users_users
+  with_items: "{{users_users}}"
 
 - name: Ensure the users are present
   user:
@@ -28,11 +28,11 @@
       system: "{{item.system|default('no')}}"
       update_password: "{{item.update_password|default('always')}}"
   when: not users_to_install or item.name|default(item) in users_to_install
-  with_items: users_users
+  with_items: "{{users_users}}"
 
 - name: Ensure the removed users are not present
   user: name={{item}} state=absent remove=yes
-  with_items: users_remove_users
+  with_items: "{{users_remove_users}}"
 
 - name: Ensure the users ssh keys are present
   authorized_key: "user={{item.0.name}} key='{{item.1}}'"
