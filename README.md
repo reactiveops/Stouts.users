@@ -25,6 +25,8 @@ users_users: []                 # Create users
                                 # Complex syntax:
                                 #   users_users:
                                 #     - name: name1
+                                #       uid: 2000
+                                #       gid: 2000
                                 #       groups: admin,sudo
                                 #       shell: /bin/zsh
 

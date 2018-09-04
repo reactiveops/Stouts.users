@@ -1,21 +1,30 @@
 ---
 
 - name: Ensure the groups are present
-  group: name={{item.name|default(item)}} system={{item.system|default("no")}}
+  group: 
+    name: "{{item.name|default(item)}}"
+    system: "{{item.system|default('no')}}"
+    gid: "{{item.gid|default(omit)}}"
   with_items: "{{users_groups}}"
 
 - name: Ensure the removed groups are not present
-  group: name={{item}} state=absent
+  group: 
+    name: "{{item}}" 
+    state: 'absent'
   with_items: "{{users_remove_groups}}"
 
 - name: Create per user groups
-  group: name={{item.name|default(item)}}
+  group: 
+    name: "{{item.name|default(item)}}"
+    system: "{{item.system|default(omit)}}"
+    gid: "{{item.gid|default(item.uid)|default(omit)}}"
   when: not users_to_install or item.name|default(item) in users_to_install
   with_items: "{{users_users}}"
 
 - name: Ensure the users are present
   user:
       name: "{{item.name|default(item)}}"
+      uid: "{{item.uid|default(omit)}}"
       comment: "{{item.comment|default('')}}"
       createhome: "{{item.createhome|default('yes')}}"
       group: "{{item.group|default(item.name|default(item))}}"
@@ -27,11 +36,15 @@
       shell: "{{item.shell|default(users_shell)}}"
       system: "{{item.system|default('no')}}"
       update_password: "{{item.update_password|default('always')}}"
+      generate_ssh_key: "{{item.generate_ssh_key|default('no')}}"
   when: not users_to_install or item.name|default(item) in users_to_install
   with_items: "{{users_users}}"
 
 - name: Ensure the removed users are not present
-  user: name={{item}} state=absent remove=yes
+  user: 
+    name: "{{item}}"
+    state: 'absent' 
+    remove: 'yes'
   with_items: "{{users_remove_users}}"
 
 - name: Ensure the users ssh keys are present
